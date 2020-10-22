@@ -28,33 +28,6 @@ class F1_abc(object):
                  gold_labels):
         raise NotImplementedError
 
-
-class F1_triplet(F1_abc):
-
-    @overrides
-    def __call__(self, predictions: List[List[Dict[str, str]]],
-                 gold_labels: List[List[Dict[str, str]]]):
-
-        for g, p in zip(gold_labels, predictions):
-            try:
-                g_set = set('_'.join((gg['object'], gg['predicate'],
-                                    gg['subject'])) for gg in g)
-                p_set = set('_'.join((pp['object'], pp['predicate'],
-                                    pp['subject'])) for pp in p)
-                
-            except:
-                g_set = set('_'.join((''.join(gg['object']), gg['predicate'],
-                                    ''.join(gg['subject']))) for gg in g)
-                p_set = set('_'.join((''.join(pp['object']), pp['predicate'],
-                                    ''.join(pp['subject']))) for pp in p)
-                with open('./case.log', 'a+') as f:
-
-                    f.write('gold: ' + str(g_set) + '  predict: ' + str(p_set) + '\n')
-            self.A += len(g_set & p_set)
-            self.B += len(p_set)
-            self.C += len(g_set)
-
-
 class F1_ner(F1_abc):
 
     @overrides
